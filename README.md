@@ -41,28 +41,51 @@ Only sample CSVs are stored in the repository.
 ## marketing-kpis/
 
 ├── data/
+
 │   ├── raw_events.csv
+
 │   ├── item_properties_part1.csv
+
 │   └── item_properties_part2.csv
+
 │
+
 ├── sql/
+
 │   ├── 01_create_raw_table.sql
+
 │   ├── 02_load_raw_events.sql
+
 │   ├── 03_clean_events.sql
+
 │   ├── 04_fact_daily.sql
+
 │   ├── 05_data_quality_checks.sql
+
 │   ├── 06_create_item_properties.sql
+
 │   ├── 07_extract_item_prices.sql
+
 │   └── 08_enrich_transactions.sql
+
 │
+
 ├── screenshots/
+
 │   ├── 01_project_structure_sql_pipeline.png
+
 │   ├── 02_event_type_distribution.png
+
 │   ├── 03_item_price_distribution_stats.png
+
 │   ├── 04_transactions_enriched_sample.png
+
 │   └── 05_fact_daily_metrics_sample.png
+
 │
+
 ├── .gitignore
+
 └── README.md
 
 ## **Data Pipeline**
