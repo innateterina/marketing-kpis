@@ -28,7 +28,7 @@ The dataset contains user-level events from an online store, including:
 * timestamps
 * user and item identifiers
 
-**⚠️ ****Note:**
+**Note:**
 
 The raw events file (~2.7M rows) exceeds Excel limits and is processed in **PostgreSQL**.
 
