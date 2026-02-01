@@ -2,19 +2,21 @@
 
 ## **Overview**
 
-This project analyses marketing and sales performance using **event-level e-commerce data**.
+This project analyses marketing performance using **event-level e-commerce data**.
 
-The main goal is to transform raw user events into **clean, reliable daily KPIs** that can be used for reporting, dashboards, or further analysis.
+The goal is to demonstrate a **SQL-first analytics workflow**:
 
-**The project follows a ** **real-world SQL analytics workflow** **:**
+from raw events to cleaned data, enriched transactions, and daily KPI fact tables ready for BI or reporting.
 
-**raw events → cleaned events → enriched transactions → daily fact table**
+**The project focuses on ** **data modelling, data quality, and KPI logic** **, not dashboards.**
 
-All transformations and calculations are done in **PostgreSQL**.
+---
 
-## **Data Source**
+## **Dataset**
 
-**RetailRocket E-commerce Dataset (Kaggle)**
+**Source:**
+
+RetailRocket E-commerce Dataset (Kaggle)
 
 https://www.kaggle.com/datasets/retailrocket/ecommerce-dataset
 
@@ -22,23 +24,27 @@ The dataset contains user-level events from an online store, including:
 
 * page views
 * add-to-cart actions
-* transactions
+* purchases (transactions)
 * timestamps
 * user and item identifiers
 
-****Note**
+**⚠️ ****Note:**
 
-The raw dataset (**raw_events.csv**, ~2.7M rows) is not included in this repository due to size limitations.
+The raw events file (~2.7M rows) exceeds Excel limits and is processed in **PostgreSQL**.
 
-Data was loaded locally into PostgreSQL and processed using SQL scripts.
+Only sample CSVs are stored in the repository.
+
+---
 
 ## **Project Structure**
 
-marketing-kpis/
+## marketing-kpis/
+
 ├── data/
 │   ├── raw_events.csv
 │   ├── item_properties_part1.csv
 │   └── item_properties_part2.csv
+│
 ├── sql/
 │   ├── 01_create_raw_table.sql
 │   ├── 02_load_raw_events.sql
@@ -48,52 +54,50 @@ marketing-kpis/
 │   ├── 06_create_item_properties.sql
 │   ├── 07_extract_item_prices.sql
 │   └── 08_enrich_transactions.sql
+│
 ├── screenshots/
 │   ├── 01_project_structure_sql_pipeline.png
 │   ├── 02_event_type_distribution.png
 │   ├── 03_item_price_distribution_stats.png
 │   ├── 04_transactions_enriched_sample.png
 │   └── 05_fact_daily_metrics_sample.png
-
+│
 ├── .gitignore
 └── README.md
 
+## **Data Pipeline**
 
-## **Data Processing Pipeline**
+### **1. Raw Layer**
 
-### **1. Raw events**
+* Raw events loaded into PostgreSQL (**raw_events**)
+* Item metadata loaded from two CSV files (**item_properties_part1**, **item_properties_part2**)
 
-* Loaded raw user events into PostgreSQL
-* Preserved original structure for traceability
-
-### **2. Data cleaning**
+### **2. Cleaning Layer**
 
 * Normalised timestamps
-* Filtered invalid records
-* Flagged purchase events
-* Ensured consistent data types
+* Standardised event types
+* Identified valid purchase events
+* Removed incomplete and invalid records
 
-### **3. Item price extraction**
+### **3. Enrichment Layer**
 
-* Combined item properties from two source files
-* Extracted numeric price values
-* Converted prices to standard currency units
+* Extracted item prices from semi-structured properties
+* Converted price units
+* Joined item prices to transaction events
+* Created an enriched transaction table with revenue
 
-### **4. Transaction enrichment**
+### **4. Aggregation Layer**
 
-* Joined transactions with item prices
-* Created a clean transaction-level dataset with revenue
+* Built a daily fact table (**fact_daily**)
+* Aggregated user activity and revenue metrics per day
 
-### **5. Daily fact table**
+---
 
-* Aggregated data by day
-* Calculated key metrics for reporting and analysis
-
-## **Fact Table:**
+## **Fact Table:** *
 
 ## **fact_daily**
 
-The final table contains daily marketing and sales metrics:
+The daily fact table contains:
 
 * event_date
 * active_users
@@ -102,42 +106,57 @@ The final table contains daily marketing and sales metrics:
 * transactions
 * purchasers
 * revenue
-* **aov** (Average Order Value)
-* **purchase_user_cr_pct** (Purchase conversion rate)
+* **aov** (average order value)
+* **purchase_user_cr_pct** (purchase conversion rate)
 
-This structure supports fast KPI analysis and BI reporting.
+*This table is designed for **fast KPI analysis and BI integration** **.**
 
-## **Key Checks & Validation**
+---
 
-Basic data quality checks were performed:
+## **Key Metrics Calculated**
 
-* event type distribution validation
-* missing revenue detection after enrichment
-* price value sanity checks (min / median / max)
-* daily aggregation consistency
+* Daily active users
+* Funnel events (views → add to cart → purchase)
+* Number of purchasers
+* Revenue
+* Average order value (AOV)
+* Purchase conversion rate
 
-## **Results & Insights**
+---
 
-* The dataset contains **2.7M+ user events**, mostly page views.
-* Only a small fraction of users complete purchases, which is typical for e-commerce funnels.
-* Revenue and transactions show clear daily fluctuations.
-* Average order value remains relatively stable across days.
+## **Data Quality Checks**
 
-## **Tools & Technologies**
+Basic QA checks were performed, including:
 
-* **SQL (PostgreSQL)** - data processing and analytics
-* **Git** - version control
-* **VS Code** - development environment
+* event type distribution
+* missing revenue detection
+* price value validation
+* consistency between transactions and revenue
+
+---
 
 ## **Screenshots**
 
-Key screenshots are available in the **/screenshots** folder:
+The **/screenshots** folder contains:
 
-* SQL project structure
-* Event type distribution
-* Item price statistics
-* Enriched transaction sample
-* Final daily KPI metrics
+1. **Project structure & SQL pipeline**
+2. **Event type distribution**
+3. **Item price distribution statistics**
+4. **Sample of enriched transactions**
+5. **Sample of daily KPI fact table**
+
+These screenshots document each stage of the data pipeline.
+
+---
+
+## **Tools & Technologies**
+
+* **PostgreSQL** — data processing and analytics
+* **SQL** — joins, aggregations, window functions
+* **VS Code** — development environment
+* **GitHub** — version control and documentation
+
+---
 
 ## **Summary**
 
@@ -145,6 +164,6 @@ This project demonstrates the ability to:
 
 * work with large event-level datasets
 * clean and validate raw data
-* enrich transactions with semi-structured attributes
-* build analytical fact tables using SQL
+* enrich transactions with external attributes
+* build analytical fact tables
 * prepare data for BI and reporting use cases
